@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>gallery-php</title>
+  <style>
+    :root {
+      --bg: #fbf6ef;
+      --ink: #2a2018;
+      --muted: #6b5b4d;
+      --accent: #f39a54;
+      --accent-2: #9bd3c7;
+      --accent-3: #f7c2c2;
+      --card: #ffffff;
+      --shadow: 0 16px 30px rgba(42, 32, 24, 0.12);
+      --ring: rgba(243, 154, 84, 0.35);
+    }
+    body {
+      margin: 0;
+      font-family: "Nunito", "Trebuchet MS", "Gill Sans", "Segoe UI", sans-serif;
+      background:
+        radial-gradient(900px 520px at 12% -12%, #ffe9d1 0%, transparent 60%),
+        radial-gradient(900px 600px at 110% 10%, #daf0eb 0%, transparent 60%),
+        radial-gradient(700px 480px at 40% 90%, #fde3e3 0%, transparent 60%),
+        var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+    h1, h2, h3 {
+      font-family: "Fredoka", "Trebuchet MS", "Gill Sans", "Segoe UI", sans-serif;
+      font-weight: 600;
+    }
+    .wrap {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 56px 20px 64px;
+    }
+    header {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+    h1 {
+      margin: 0;
+      font-size: 46px;
+      letter-spacing: -0.02em;
+    }
+    .tagline {
+      font-size: 18px;
+      color: var(--muted);
+      max-width: 620px;
+    }
+    .cta {
+      display: inline-block;
+      background: linear-gradient(135deg, #f7a45f, #f3c164);
+      color: #3b2412;
+      text-decoration: none;
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-weight: 600;
+      box-shadow: 0 10px 20px rgba(243, 154, 84, 0.35);
+      border: 2px solid rgba(255, 255, 255, 0.6);
+    }
+    .cta:focus-visible {
+      outline: 3px solid var(--ring);
+      outline-offset: 2px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+      animation: rise 0.6s ease both;
+      border: 1px solid rgba(42, 32, 24, 0.08);
+    }
+    .card h3 {
+      margin: 0 0 8px 0;
+      font-size: 18px;
+    }
+    ul {
+      margin: 8px 0 0 0;
+      padding-left: 18px;
+    }
+    .note {
+      margin-top: 28px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    pre {
+      background: #fff7ef;
+      border: 1px solid rgba(42, 32, 24, 0.12);
+      border-radius: 14px;
+      padding: 14px 16px;
+      overflow: auto;
+      box-shadow: var(--shadow);
+    }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 13px;
+      color: #3b2412;
+    }
+    .pill {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #fff3df;
+      color: #7a4f2e;
+      font-size: 12px;
+      margin-right: 6px;
+      border: 1px solid rgba(122, 79, 46, 0.12);
+    }
+
+    .hero {
+      display: grid;
+      gap: 24px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      align-items: center;
+    }
+
+    .hero-text {
+      animation: rise 0.6s ease both;
+    }
+
+    .hero-media {
+      position: relative;
+      animation: floatIn 0.8s ease both;
+    }
+
+    .shots {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 12px;
+    }
+
+    .shot {
+      width: 100%;
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      background: #fff7ef;
+      animation: rise 0.7s ease both;
+    }
+
+    .shot-a {
+      grid-column: 1 / span 4;
+      grid-row: 1;
+      transform: rotate(-1.2deg);
+      animation-delay: 0.05s;
+    }
+
+    .shot-b {
+      grid-column: 3 / span 4;
+      grid-row: 2;
+      transform: rotate(1.4deg);
+      animation-delay: 0.15s;
+    }
+
+    .shot-c {
+      grid-column: 1 / span 3;
+      grid-row: 2;
+      transform: rotate(-0.8deg);
+      animation-delay: 0.25s;
+    }
+
+    .shot-d {
+      grid-column: 4 / span 3;
+      grid-row: 1;
+      transform: rotate(0.8deg);
+      animation-delay: 0.2s;
+    }
+
+    .accent-band {
+      margin: 36px 0 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: linear-gradient(120deg, rgba(243, 154, 84, 0.22), rgba(155, 211, 199, 0.22));
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    footer {
+      margin-top: 48px;
+      padding-top: 18px;
+      border-top: 1px dashed rgba(42, 32, 24, 0.2);
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    footer a {
+      color: inherit;
+      text-decoration: none;
+      border-bottom: 1px dotted rgba(42, 32, 24, 0.4);
+    }
+
+    footer a:hover {
+      color: var(--ink);
+    }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes floatIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @media (max-width: 720px) {
+      h1 {
+        font-size: 36px;
+      }
+      .shots {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .shot-a,
+      .shot-b,
+      .shot-c,
+      .shot-d {
+        grid-column: auto;
+        grid-row: auto;
+        transform: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .card,
+      .hero-text,
+      .hero-media,
+      .shot {
+        animation: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <div class="hero-text">
+        <div>
+          <span class="pill">single-file PHP</span>
+          <span class="pill">image gallery</span>
+        </div>
+        <h1>gallery.php</h1>
+        <p class="tagline">A single PHP file that turns a folder of images into a clean, navigable gallery with lazy loading, lightbox controls, and theming.</p>
+        <div>
+          <a class="cta" href="https://raw.githubusercontent.com/anami.github.io/gallery-php/main/gallery.php" download>Download gallery.php</a>
+        </div>
+        <div class="accent-band">Drop in a folder, refresh the page, and your gallery is ready.</div>
+      </div>
+      <div class="hero-media">
+        <div class="shots">
+          <img class="shot shot-a" src="img/gallery01.png" alt="Gallery view preview 1">
+          <img class="shot shot-d" src="img/gallery02.png" alt="Gallery view preview 2">
+          <img class="shot shot-c" src="img/gallery03.png" alt="Lightbox preview">
+          <img class="shot shot-b" src="img/gallery04.png" alt="Theme preview">
+        </div>
+      </div>
+    </header>
+
+    <section class="grid">
+      <div class="card">
+        <h3>What it does</h3>
+        <ul>
+          <li>Scans a folder and renders thumbnails</li>
+          <li>Lightbox with keyboard navigation</li>
+          <li>Lazy-loading images for faster loads</li>
+          <li>Optional password gate via .env</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Deploy in minutes</h3>
+        <ul>
+          <li>Upload <strong>gallery.php</strong> to your server</li>
+          <li>Place images in the same directory</li>
+          <li>Open the folder in your browser</li>
+        </ul>
+        <p class="note" style="margin-top: 10px;">
+          More configuration details in the <a href="https://github.com/anami.github.io/gallery-php/blob/main/README.md">README.md</a>.
+        </p>
+      </div>
+    </section>
+
+    <footer>
+      Made with ❤️ by <a href="https://anami.github.io">anami.github.io</a>
+    </footer>
+  </div>
+</body>
+</html>

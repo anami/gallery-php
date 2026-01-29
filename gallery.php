@@ -221,7 +221,7 @@ foreach ($items as $item) {
     }
 
     .lightbox {
-      display: flex;
+      display: none;
       align-items: center;
       justify-content: center;
       flex-direction: row;
@@ -290,7 +290,7 @@ foreach ($items as $item) {
       font-size: 40px;
       color: white;
       cursor: pointer;
-      z-index: 10000;
+      z-index: 10003;
     }
 
     .lightbox-prev,
@@ -321,6 +321,89 @@ foreach ($items as $item) {
       color: white;
       cursor: pointer;
       z-index: 10000;
+    }
+
+    .top-controls {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10001;
+      display: flex;
+      gap: 10px;
+    }
+
+    .icon-btn {
+      border: none;
+      background: transparent;
+      font-size: 24px;
+      cursor: pointer;
+      color: inherit;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 10002;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .modal-content {
+      background: var(--bg-color);
+      color: var(--text-color);
+      border-radius: 10px;
+      padding: 16px 18px;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-content h3 {
+      margin: 0 0 10px 0;
+      font-size: 18px;
+    }
+
+    .shortcut-list {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .shortcut-list li {
+      margin: 6px 0;
+    }
+
+    kbd {
+      display: inline-block;
+      padding: 2px 6px;
+      border: 1px solid rgba(0, 0, 0, 0.25);
+      border-bottom-width: 2px;
+      border-radius: 4px;
+      background: #f7f7f7;
+      color: #111;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.9em;
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.15);
+    }
+
+    [data-theme="dark"] kbd {
+      background: #2a2a2a;
+      color: #f0f0f0;
+      border-color: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .modal-close {
+      border: none;
+      background: transparent;
+      font-size: 22px;
+      cursor: pointer;
+      float: right;
+      color: inherit;
     }
 
 
@@ -360,6 +443,10 @@ foreach ($items as $item) {
     <?php endforeach; ?>
   </div>
 
+  <?php if (count($images) > 0): ?>
+    <p style="margin: 0 0 12px 0; opacity: 0.8;">Click a thumbnail to view the full image.</p>
+  <?php endif; ?>
+
   <div class="grid">
     <?php foreach ($images as $i): ?>
       <div class="thumb-wrapper">
@@ -378,8 +465,22 @@ foreach ($items as $item) {
     <img id="lightbox-img">
     <span class="lightbox-nav lightbox-next" onclick="nextImage()">&rarr;</span>
   </div>
-  <button id="theme-toggle"
-    style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 10001;">🌓 Toggle Theme</button>
+  <div class="top-controls">
+    <button id="shortcuts-toggle" class="icon-btn" aria-label="Keyboard shortcuts">⌨️</button>
+    <button id="theme-toggle" class="icon-btn" aria-label="Toggle theme">🌓</button>
+  </div>
+
+  <div class="modal" id="shortcuts-modal" role="dialog" aria-modal="true" aria-labelledby="shortcuts-title">
+    <div class="modal-content">
+      <button class="modal-close" id="shortcuts-close" aria-label="Close">&times;</button>
+      <h3 id="shortcuts-title">Keyboard shortcuts</h3>
+      <ul class="shortcut-list">
+        <li><kbd>←</kbd> Previous image (when lightbox open)</li>
+        <li><kbd>→</kbd> Next image (when lightbox open)</li>
+        <li><kbd>Esc</kbd> Close lightbox</li>
+      </ul>
+    </div>
+  </div>
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -495,6 +596,31 @@ foreach ($items as $item) {
       let newTheme = (current === 'dark') ? '' : 'dark';
       root.setAttribute('data-theme', newTheme);
       localStorage.setItem('theme', newTheme);
+    });
+  </script>
+  <script>
+    const shortcutsToggle = document.getElementById('shortcuts-toggle');
+    const shortcutsModal = document.getElementById('shortcuts-modal');
+    const shortcutsClose = document.getElementById('shortcuts-close');
+
+    function openShortcuts() {
+      shortcutsModal.style.display = 'flex';
+    }
+
+    function closeShortcuts() {
+      shortcutsModal.style.display = 'none';
+    }
+
+    shortcutsToggle.addEventListener('click', openShortcuts);
+    shortcutsClose.addEventListener('click', closeShortcuts);
+    shortcutsModal.addEventListener('click', (e) => {
+      if (e.target === shortcutsModal) closeShortcuts();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && shortcutsModal.style.display === 'flex') {
+        closeShortcuts();
+      }
     });
   </script>
 
